@@ -8,9 +8,9 @@ import { hideLoadMoreButton } from "./js/render-functions.js";
 import { checkBtnStatus } from "./js/render-functions.js";
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
-import { scrollBy } from "./js/render-functions.js"
 const btnLoadMore = document.querySelector(`.ooButton`);
 const form = document.querySelector(`.form`);
+const gallery = document.querySelector(".gallery");
 const PER_PAGE = 15;
 let query;
 let page;
@@ -63,16 +63,14 @@ btnLoadMore.addEventListener(`click`, async (e) => {
   try{
 const data = await api.getImagesByQuery(query, page);
 render.createGallery(data.hits);
-
-scrollBy();
-  }catch(error){
-      iziToast.error({
-      message: `Error: ${error}`,
-      position: "topRight"
-    });
-  }  finally {
-    hideLoader(); 
-  }
+function scrollBy(){
+  const elem = gallery.lastElementChild;
+  const height = elem.getBoundingClientRect().height;
+  window.scrollBy({
+top: height * 2,
+behavior: `smooth`,
+  }); 
+}
   if (page >= totalPages) {
     render.hideLoadMoreButton();
 
@@ -83,6 +81,15 @@ scrollBy();
 
     return;
   }
+scrollBy();
+  }catch(error){
+      iziToast.error({
+      message: `Error: ${error}`,
+      position: "topRight"
+    });
+  }  finally {
+    hideLoader(); 
+  } 
 checkBtnStatus(page, totalPages);
 });
 
