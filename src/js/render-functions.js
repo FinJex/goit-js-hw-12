@@ -47,6 +47,7 @@ return ` <li class="gallery-item">
       </li>`;
 }
 const loader = document.querySelector(".loader");
+const ooButton = document.querySelector(".ooButton");
 export function clearGallery() {
 gallery.innerHTML = "";
 }
@@ -58,4 +59,23 @@ loader.classList.remove(`hidden`);
 export function hideLoader() {
 loader.classList.add(`hidden`);
 }
+export function showLoadMoreButton() {
+ooButton.classList.remove(`hidden`);
+}
+export function hideLoadMoreButton() {
+ooButton.classList.add(`hidden`);
+}
+export function checkBtnStatus(page, totalPages) {
+  if (page >= totalPages) {
+    hideLoadMoreButton();
+  } else {
+    showLoadMoreButton();
+  }
+}
 
+export function getBoundingClientRect(){
+  window.scrollBy({
+top: 400,
+behavior: `smooth`,
+  }); 
+}
