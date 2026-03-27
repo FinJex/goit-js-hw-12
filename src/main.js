@@ -35,6 +35,12 @@ try{
   }
   render.createGallery(data.hits);
   totalPages = Math.ceil(data.totalHits / PER_PAGE);
+  if (totalPages === 1) {
+  iziToast.info({
+    message: "We're sorry, but you've reached the end of search results.",
+    position: "topRight",
+  });
+}
   checkBtnStatus(page, totalPages);
       form.reset();
 } catch(error){
@@ -50,6 +56,7 @@ try{
 
 
 btnLoadMore.addEventListener(`click`, async (e) => {
+  if (!query) return;
   page+=1;
   hideLoadMoreButton();
   showLoader();
