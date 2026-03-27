@@ -13,12 +13,11 @@ export async function getImagesByQuery(query, page) {
         per_page: 15,
       },
     });
-    return {
-      images: response.data.hits,
-      totalHits: response.data.totalHits,
-    };
+ return response.data;
   } catch (error) {
-    console.log(error);
-return { images: [], totalHits: 0 };
+    console.error(error);
+throw error;
   }
 }
+
+

@@ -73,9 +73,12 @@ export function checkBtnStatus(page, totalPages) {
   }
 }
 
-export function getBoundingClientRect(){
+export function scrollBy(){
+  const elem = gallery.lastElementChild;
+  const height = elem.getBoundingClientRect().height;
   window.scrollBy({
-top: 400,
+top: height * 3,
 behavior: `smooth`,
   }); 
 }
+

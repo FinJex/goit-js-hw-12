@@ -8,7 +8,7 @@ import { hideLoadMoreButton } from "./js/render-functions.js";
 import { checkBtnStatus } from "./js/render-functions.js";
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
-import { getBoundingClientRect } from "./js/render-functions.js"
+import { scrollBy } from "./js/render-functions.js"
 const btnLoadMore = document.querySelector(`.ooButton`);
 const form = document.querySelector(`.form`);
 const PER_PAGE = 15;
@@ -25,16 +25,16 @@ form.addEventListener(`submit`, async (e) => {
     clearGallery();
     showLoader();
 try{
-     const { images, totalHits } = await api.getImagesByQuery(query, page);
-    if (images.length === 0) {
+     const data = await api.getImagesByQuery(query, page);
+    if (data.hits.length === 0) {
     iziToast.error({
       message: "Sorry, there are no images matching your search query. Please try again!",
       position: "topRight"
     }); 
     return;
   }
-  render.createGallery(images);
-  totalPages = Math.ceil(totalHits / PER_PAGE);
+  render.createGallery(data.hits);
+  totalPages = Math.ceil(data.totalHits / PER_PAGE);
   checkBtnStatus(page, totalPages);
       form.reset();
 } catch(error){
@@ -52,16 +52,19 @@ try{
 btnLoadMore.addEventListener(`click`, async (e) => {
   page+=1;
   hideLoadMoreButton();
+  showLoader();
   try{
-const {images} = await api.getImagesByQuery(query, page);
-render.createGallery(images);
+const data = await api.getImagesByQuery(query, page);
+render.createGallery(data.hits);
 
-getBoundingClientRect();
+scrollBy();
   }catch(error){
       iziToast.error({
       message: `Error: ${error}`,
       position: "topRight"
     });
+  }  finally {
+    hideLoader(); 
   }
   if (page >= totalPages) {
     render.hideLoadMoreButton();
